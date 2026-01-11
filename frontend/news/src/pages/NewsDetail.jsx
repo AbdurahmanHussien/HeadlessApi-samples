@@ -48,37 +48,50 @@ const NewsDetail = () => {
     return (
         <div className="news-details-page">
 
-            {/* --- Banner --- */}
-            <header className="app-wrapper mt-8" style={{marginTop:'30px'}}>
-                <div className="banner-wrapper" style={{height:'300px', borderRadius:'16px', overflow:'hidden', position:'relative'}}>
-                    <div
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            background: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${article.image ? `http://localhost:8080${article.image}` : '/placeholder.jpg'}) no-repeat center center/cover`
-                        }}
-                    />
+            <header className="app-wrapper mt-8">
+                <div className="banner-wrapper">
+                    <div className="banner-content">
+                        <div className="splide banner-slider" id="banner-slider">
+                            <div className="splide__track">
+                                <ul className="splide__list">
+                                    <li
+                                        className="splide__slide"
+                                        style={{
+                                            height: '400px',
+                                            width: '100%',
+                                            display: 'block',
+                                            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${article.image ? `http://localhost:8080${article.image}` : '/placeholder.jpg'})`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                            backgroundRepeat: 'no-repeat'
+                                        }}
+                                    ></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </header>
 
             {/* --- Content --- */}
-            <main className="app-wrapper main-content" style={{maxWidth:'1200px', margin:'0 auto', padding:'20px'}}>
+            <main className="app-wrapper main-content">
                 <section className="flex gap-4">
-                    <div className="card announce-details-card" style={{background:'white', padding:'30px', borderRadius:'12px', boxShadow:'0 4px 12px rgba(0,0,0,0.05)'}}>
+                    <div className="card announce-details-card">
 
-                        <div className="section-card-header" style={{marginBottom:'20px', borderBottom:'1px solid #eee', paddingBottom:'15px'}}>
+                        <div className="section-card-header"
+                             >
                             <div className="section-card-header__title flex-col items-start gap-2">
-                                <h2 className="font-bold text-primary" style={{color:'#1B5A37', fontSize:'2rem', marginBottom:'10px'}}>
+                                <h2 className="font-bold text-primary">
                                     {article.title}
                                 </h2>
-                                <p className="text-details" style={{color:'#666'}}>
+                                <p className="text-details" style={{color: '#666'}}>
                                     {t('publish_date')}: {dateStr}
                                 </p>
                             </div>
                         </div>
 
                         <div className="content">
-                            <p style={{lineHeight:'1.8', color:'#333', fontSize:'1.1rem'}}>
+                            <p style={{lineHeight: '1.8', color: '#333', fontSize: '1.1rem'}}>
                                 {article.description}
                             </p>
                         </div>
