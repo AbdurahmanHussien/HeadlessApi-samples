@@ -1,14 +1,27 @@
 import React from 'react';
 import {useNavigate} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 const NewsCard = ({ article }) => {
+    const { t, i18n } = useTranslation();
     // Use Liferay URL or a placeholder
     const navigate = useNavigate();
     const imageUrl = article.image
         ? `http://localhost:8080${article.image}`
         : "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1000&auto=format&fit=crop";
 
-    const dateStr = article.date ? new Date(article.date).toLocaleDateString("en-GB") : "";
+    const getDateLocale = (lang) => {
+        if (lang === 'ar') return 'ar-EG';
+        return 'en-US';
+    };
+
+    const dateStr = article.date
+        ? new Date(article.date).toLocaleDateString(getDateLocale(i18n.language), {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+        })
+        : "";
 
     return (
         <div className="news-card">
@@ -52,7 +65,7 @@ const NewsCard = ({ article }) => {
                         className="btn"
                         onClick={() => navigate(`/news/${article.id}`)}
                     >
-                        News Details
+                        {t('newsDetails')}
                     </button>
                 </div>
 

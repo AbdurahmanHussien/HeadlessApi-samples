@@ -1,62 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import {getSystemToken} from "../authService.js";
+import { useParams } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
+import { getNewsDetail } from "../services/newsService";
 
 const NewsDetail = () => {
-    const { id } = useParams(); // Get ID from URL
-    const navigate = useNavigate();
+    const { id } = useParams();
+    const { t, i18n } = useTranslation();
+
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
-
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const initAuth = async () => {
-            const token = await getSystemToken();
-            if (token) {
-                setIsAuthenticated(true);
-                fetchArticle();
+        const loadArticle = async () => {
+            try {
+                setLoading(true);
+                const data = await getNewsDetail(id, i18n.language);
+                setArticle(data);
+            } catch (err) {
+                console.error(err);
+                setError(err.message);
+            } finally {
+                setLoading(false);
             }
         };
-        initAuth();
-    }, [id, isAuthenticated]);
 
-    const fetchArticle = async () => {
-        try {
-            // Call your API with the ID
-            const token = await getSystemToken();
+        loadArticle();
+    }, [id, i18n.language]);
 
-            const response = await fetch(`http://localhost:8080/o/News/v1.0/news/${id}`, {
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                }
-            });
+    if (loading) return <div className="p-4">{t('loading')}...</div>;
+    if (error) return <div className="p-4" style={{color: 'red'}}>Error: {error}</div>;
+    if (!article) return <div className="p-4">{t('article_not_found')}</div>;
 
-            if (!response.ok) throw new Error("Failed to load article");
-
-            const data = await response.json();
-            setArticle(data);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
+    const getDateLocale = (lang) => {
+        if (lang === 'ar') return 'ar-EG';
+        return 'en-US';
     };
 
-    if (loading) return <div className="p-4">Loading details...</div>;
-    if (!article) return <div className="p-4">Article not found</div>;
-
-    // Format Date
-    const dateStr = article.date ? new Date(article.date).toLocaleDateString("en-GB") : "";
+    const dateStr = article.date
+        ? new Date(article.date).toLocaleDateString(getDateLocale(i18n.language), {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        })
+        : "";
 
     return (
         <div className="news-details-page">
-            
-            {/* --- Header / Banner --- */}
+
+            {/* --- Banner --- */}
             <header className="app-wrapper mt-8" style={{marginTop:'30px'}}>
                 <div className="banner-wrapper" style={{height:'300px', borderRadius:'16px', overflow:'hidden', position:'relative'}}>
-                    {/* Use Article Image or Fallback */}
                     <div
                         style={{
                             width: '100%',
@@ -67,7 +61,7 @@ const NewsDetail = () => {
                 </div>
             </header>
 
-            {/* --- Main Content --- */}
+            {/* --- Content --- */}
             <main className="app-wrapper main-content" style={{maxWidth:'1200px', margin:'0 auto', padding:'20px'}}>
                 <section className="flex gap-4">
                     <div className="card announce-details-card" style={{background:'white', padding:'30px', borderRadius:'12px', boxShadow:'0 4px 12px rgba(0,0,0,0.05)'}}>
@@ -78,7 +72,7 @@ const NewsDetail = () => {
                                     {article.title}
                                 </h2>
                                 <p className="text-details" style={{color:'#666'}}>
-                                    Publish Date {dateStr}
+                                    {t('publish_date')}: {dateStr}
                                 </p>
                             </div>
                         </div>

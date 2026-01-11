@@ -1,10 +1,4 @@
-
-const CONFIG = {
-    url: "http://localhost:8080/o/oauth2/token",
-    clientId: "id-6a225931-a6f6-a64d-4343-f85df92e2b",
-    clientSecret: "secret-efa032bf-10b5-22f7-dfb9-9c14b0238e89"
-};
-
+import {AUTH_CONFIG as CONFIG, AUTH_CONFIG} from "../utils/config";
 
 export const getSystemToken = async (forceRefresh = false) => {
     if (!forceRefresh) {
@@ -19,7 +13,7 @@ export const getSystemToken = async (forceRefresh = false) => {
     params.append("client_secret", CONFIG.clientSecret);
 
     try {
-        const response = await fetch(CONFIG.url, {
+        const response = await fetch(CONFIG.authUrl, {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: params
@@ -46,24 +40,21 @@ export const fetchWithAuth = async (url, options = {}) => {
     const headers = {
         ...options.headers,
         "Authorization": `Bearer ${token}`,
+        ...options.headers,
         "Content-Type": "application/json"
     };
 
     try {
         let response = await fetch(url, { ...options, headers });
 
-        // 3. Intercept 401 (Expired Token)
         if (response.status === 401) {
             console.warn("Token expired. Wiping storage and retrying...");
 
-            // CRITICAL: Remove the bad token immediately
             sessionStorage.removeItem("system_token");
 
-            // Force fetch a brand new one
             token = await getSystemToken(true);
 
             if (token) {
-                // Retry the request with the new token
                 headers["Authorization"] = `Bearer ${token}`;
                 response = await fetch(url, { ...options, headers });
             }
@@ -71,9 +62,6 @@ export const fetchWithAuth = async (url, options = {}) => {
 
         return response;
     } catch (error) {
-        // If we get a CORS error (TypeError), it often means a 401 happened
-        // behind the scenes but Liferay stripped headers.
-        // We wipe the token to ensure next reload is fresh.
         console.error("Network/CORS Error:", error);
         sessionStorage.removeItem("system_token");
         throw error;

@@ -11,8 +11,10 @@ const resources = {
             "search_placeholder": "Search...",
             "reset": "Reset",
             "search": "Search",
+            "newsDetails": "News Details",
             "page": "Page",
-            "no_news": "No news found matching your criteria."
+            "no_news": "No news found matching your criteria.",
+            "publish_date": "Publish Date"
         }
     },
     ar: {
@@ -22,10 +24,13 @@ const resources = {
             "news": "الأخبار",
             "logout": "تسجيل خروج",
             "search_placeholder": "بحث...",
+            "newsDetails": "تفاصيل الخبر",
             "reset": "إعادة تعيين",
             "search": "بحث",
             "page": "صفحة",
-            "no_news": "لم يتم العثور على أخبار."
+            "no_news": "لم يتم العثور على أخبار.",
+            "publish_date": "تاريخ النشر"
+
         }
     }
 };
