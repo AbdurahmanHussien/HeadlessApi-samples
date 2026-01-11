@@ -5,7 +5,6 @@ import {formatDate} from "../utils/formatters.js";
 
 const NewsCard = ({ article }) => {
     const { t, i18n } = useTranslation();
-    // Use Liferay URL or a placeholder
     const navigate = useNavigate();
     const imageUrl = article.image
         ? `http://localhost:8080${article.image}`
@@ -53,7 +52,7 @@ const NewsCard = ({ article }) => {
                     <p>{article.description}</p>
                     <button
                         className="btn"
-                        onClick={() => navigate(`/news/${article.id}`)}
+                        onClick={() => navigate(`/${i18n.language}/news/${article.id}`)}
                     >
                         {t('newsDetails')}
                     </button>

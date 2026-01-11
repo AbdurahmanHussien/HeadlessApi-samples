@@ -15,6 +15,7 @@ const News = () => {
     const urlDate = searchParams.get("date") || "";
     const currentPage = parseInt(searchParams.get("page") || "1");
 
+
     const [tempSearch, setTempSearch] = useState(urlSearch);
     const [tempDate, setTempDate] = useState(urlDate);
 

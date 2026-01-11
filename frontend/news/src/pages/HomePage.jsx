@@ -45,7 +45,7 @@ const HomePage = () => {
                     {t('welcome_subtitle')}
                 </p>
 
-                <Link to="/news">
+                <Link to={`/${i18n.language}/news`}>
                     <button style={{
                         padding: '15px 40px',
                         fontSize: '1.1rem',
@@ -76,7 +76,7 @@ const HomePage = () => {
                         {t('latest_updates')}
                     </h2>
 
-                    <Link to="/news" style={{ color: '#1B5A37', fontWeight: 'bold', textDecoration: 'none' }}>
+                    <Link to={`/${i18n.language}/news`} style={{ color: '#1B5A37', fontWeight: 'bold', textDecoration: 'none' }}>
                         {t('browse_news')} &rarr;
                     </Link>
                 </div>

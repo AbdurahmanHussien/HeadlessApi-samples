@@ -4462,3 +4462,13 @@ input[type="date"].styled-date::-webkit-calendar-picker-indicator {
   position: absolute;
   left: 10px; /* Match your padding */
 }
+
+*:focus {
+  outline: none !important;
+}
+
+
+*:focus-visible {
+  outline: 2px solid #1B5A37;
+  outline-offset: 2px;
+}
