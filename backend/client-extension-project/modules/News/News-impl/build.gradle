@@ -1,0 +1,7 @@
+dependencies {
+	api project(":modules:News:News-api")
+
+	compileOnly group: "com.liferay.portal", name: "release.dxp.api"
+}
+
+group = "news"

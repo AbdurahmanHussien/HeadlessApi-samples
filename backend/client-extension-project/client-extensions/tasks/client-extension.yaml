@@ -1,0 +1,17 @@
+assemble:
+    -   from: dist/tasks
+        into: static
+tasks:
+    cssURLs:
+        -   styles.*.css
+    friendlyURLMapping: tasks
+    htmlElementName: tasks
+    instanceable: false
+    name: Tasks
+    portletCategoryName: category.client-extensions
+    type: customElement
+    urls:
+        -   main.*.js
+        -   polyfills.*.js
+        -   runtime.*.js
+    useESM: true

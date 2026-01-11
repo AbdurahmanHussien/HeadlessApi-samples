@@ -1,0 +1,5 @@
+Bundle-Name: News-test
+Bundle-SymbolicName: news.test
+Bundle-Version: 1.0.0
+-includeresource: news.client.jar=../News-client/build/libs/news.client-1.0.0.jar;lib:=true
+-provider-policy: ${replacestring;${range;[==,==]};.*,(.*)];$1}

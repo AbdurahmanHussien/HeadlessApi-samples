@@ -1,0 +1,99 @@
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import {getSystemToken} from "../authService.js";
+
+const NewsDetail = () => {
+    const { id } = useParams(); // Get ID from URL
+    const navigate = useNavigate();
+    const [article, setArticle] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const initAuth = async () => {
+            const token = await getSystemToken();
+            if (token) {
+                setIsAuthenticated(true);
+                fetchArticle();
+            }
+        };
+        initAuth();
+    }, [id, isAuthenticated]);
+
+    const fetchArticle = async () => {
+        try {
+            // Call your API with the ID
+            const token = await getSystemToken();
+
+            const response = await fetch(`http://localhost:8080/o/News/v1.0/news/${id}`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) throw new Error("Failed to load article");
+
+            const data = await response.json();
+            setArticle(data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) return <div className="p-4">Loading details...</div>;
+    if (!article) return <div className="p-4">Article not found</div>;
+
+    // Format Date
+    const dateStr = article.date ? new Date(article.date).toLocaleDateString("en-GB") : "";
+
+    return (
+        <div className="news-details-page">
+            
+            {/* --- Header / Banner --- */}
+            <header className="app-wrapper mt-8" style={{marginTop:'30px'}}>
+                <div className="banner-wrapper" style={{height:'300px', borderRadius:'16px', overflow:'hidden', position:'relative'}}>
+                    {/* Use Article Image or Fallback */}
+                    <div
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            background: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${article.image ? `http://localhost:8080${article.image}` : '/placeholder.jpg'}) no-repeat center center/cover`
+                        }}
+                    />
+                </div>
+            </header>
+
+            {/* --- Main Content --- */}
+            <main className="app-wrapper main-content" style={{maxWidth:'1200px', margin:'0 auto', padding:'20px'}}>
+                <section className="flex gap-4">
+                    <div className="card announce-details-card" style={{background:'white', padding:'30px', borderRadius:'12px', boxShadow:'0 4px 12px rgba(0,0,0,0.05)'}}>
+
+                        <div className="section-card-header" style={{marginBottom:'20px', borderBottom:'1px solid #eee', paddingBottom:'15px'}}>
+                            <div className="section-card-header__title flex-col items-start gap-2">
+                                <h2 className="font-bold text-primary" style={{color:'#1B5A37', fontSize:'2rem', marginBottom:'10px'}}>
+                                    {article.title}
+                                </h2>
+                                <p className="text-details" style={{color:'#666'}}>
+                                    Publish Date {dateStr}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="content">
+                            <p style={{lineHeight:'1.8', color:'#333', fontSize:'1.1rem'}}>
+                                {article.description}
+                            </p>
+                        </div>
+
+                    </div>
+                </section>
+            </main>
+        </div>
+    );
+};
+
+export default NewsDetail;

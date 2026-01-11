@@ -1,0 +1,9 @@
+apiDir: "../News-api/src/main/java"
+apiPackagePath: "news"
+application:
+    baseURI: "/News"
+    className: "NewsApplication"
+    name: "News"
+author: "ThinkPad"
+clientDir: "../News-client/src/main/java"
+testDir: "../News-test/src/testIntegration/java"

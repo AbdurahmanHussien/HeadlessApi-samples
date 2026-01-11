@@ -1,0 +1,16 @@
+<div class="user-widget">
+  <h3>Employee Directory</h3>
+
+  <div *ngIf="loading">Loading users...</div>
+  <div *ngIf="error" class="text-danger">{{ error }}</div>
+
+  <ul *ngIf="!loading && !error" class="list-group">
+    <li *ngFor="let user of users" class="list-group-item">
+      <strong>{{ user.name }}</strong>
+      <br>
+      <span class="text-muted">{{ user.jobTitle || 'N/A' }}</span>
+      <br>
+      <small>{{ user.emailAddress }}</small>
+    </li>
+  </ul>
+</div>

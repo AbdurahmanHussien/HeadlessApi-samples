@@ -1,0 +1,6 @@
+Bundle-Name: News-api
+Bundle-SymbolicName: news.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	news.dto.v1_0,\
+	news.resource.v1_0
