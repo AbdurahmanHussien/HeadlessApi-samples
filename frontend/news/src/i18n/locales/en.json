@@ -1,0 +1,18 @@
+{
+  "platform_logo": "Platform Logo",
+  "home": "Home",
+  "news": "News",
+  "logout": "Logout",
+  "search_placeholder": "Search...",
+  "reset": "Reset",
+  "search": "Search",
+  "newsDetails": "News Details",
+  "page": "Page",
+  "no_news": "No news found matching your criteria.",
+  "publish_date": "Publish Date",
+  "welcome_title": "Welcome to Our Digital Platform",
+  "welcome_subtitle": "Stay connected with the latest updates, company news, and announcements directly from our headquarters.",
+  "browse_news": "Browse All News",
+  "latest_updates": "Latest Updates",
+  "view_details": "View Details"
+}

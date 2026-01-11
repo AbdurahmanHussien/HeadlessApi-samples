@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { getNewsDetail } from "../services/newsService";
+import {formatDate} from "../utils/formatters.js";
 
 const NewsDetail = () => {
     const { id } = useParams();
@@ -32,18 +33,6 @@ const NewsDetail = () => {
     if (error) return <div className="p-4" style={{color: 'red'}}>Error: {error}</div>;
     if (!article) return <div className="p-4">{t('article_not_found')}</div>;
 
-    const getDateLocale = (lang) => {
-        if (lang === 'ar') return 'ar-EG';
-        return 'en-US';
-    };
-
-    const dateStr = article.date
-        ? new Date(article.date).toLocaleDateString(getDateLocale(i18n.language), {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        })
-        : "";
 
     return (
         <div className="news-details-page">
@@ -85,7 +74,7 @@ const NewsDetail = () => {
                                     {article.title}
                                 </h2>
                                 <p className="text-details" style={{color: '#666'}}>
-                                    {t('publish_date')}: {dateStr}
+                                    {t('publish_date')}: {formatDate(article.date, i18n.language)}
                                 </p>
                             </div>
                         </div>

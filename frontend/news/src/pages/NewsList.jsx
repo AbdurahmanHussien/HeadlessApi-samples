@@ -101,16 +101,24 @@ const News = () => {
                                 onChange={(e) => setTempSearch(e.target.value)}
                             />
                         </div>
-                        <div className="custom-date" style={{padding: 0, overflow: 'hidden', display:'flex', position: 'relative'}}>
+                        <div className="custom-date-wrapper">
+                            <svg
+                                className="date-icon"
+                                viewBox="0 0 24 24"
+                                fill="#555"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path d="M19 4H18V2H16V4H8V2H6V4H5C3.89 4 3.01 4.9 3.01 6L3 20C3 21.1 3.89 22 5 22H19C20.1 22 21 21.1 21 20V6C21 4.9 20.1 4 19 4ZM19 20H5V9H19V20ZM19 7H5V6H19V7Z"/>
+                            </svg>
                             <input
-                                type="date"
-                                className="styled-date"
-                                style={{
-                                    background: "#f3f4f6", outline: 'none', fontFamily: 'inherit',
-                                    width: '100%', color: '#555', height: '35px', padding: '22px 15px',
-                                    borderRadius: '8px', border: '1px solid #E2E3E5'
-                                }}
+                                type="text"
+                                className="styled-date-input"
+                                placeholder="Select Date"
                                 value={tempDate}
+                                onFocus={(e) => (e.target.type = "date")}
+                                onBlur={(e) => {
+                                    if (!e.target.value) e.target.type = "text";
+                                }}
                                 onChange={(e) => setTempDate(e.target.value)}
                             />
                         </div>
