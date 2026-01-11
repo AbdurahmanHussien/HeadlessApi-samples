@@ -220,12 +220,12 @@ _log.info(serviceContext.getScopeGroupId());
         item.setDate(ja.getDisplayDate()); // Return Java Date, format on Frontend
 
         // Title
-        String title = ja.getTitle(Locale.getDefault());
+        String title = ja.getTitle(locale);
         if (Validator.isNull(title)) title = ja.getTitleCurrentValue();
         item.setTitle(title);
 
 
-        String rawDesc = ja.getDescription(Locale.getDefault().toString());
+        String rawDesc = ja.getDescription(locale);
         if (Validator.isNull(rawDesc)) rawDesc = ja.getDescription();
         item.setDescription(HtmlUtil.stripHtml(rawDesc));
 
