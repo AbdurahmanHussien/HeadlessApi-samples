@@ -52,32 +52,26 @@ public class NewsResourceImpl extends BaseNewsResourceImpl {
         Locale locale = contextAcceptLanguage.getPreferredLocale();
 
         ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-        // 1. Get Structure Key
         DDMStructure structure = _ddmStructureLocalService.getDDMStructure(structureId);
         String structureKey = structure.getStructureKey();
-_log.info(serviceContext.getScopeGroupId());
-        // 2. Search Context
+        _log.info(serviceContext.getScopeGroupId());
         SearchContext searchContext = new SearchContext();
         searchContext.setCompanyId(contextCompany.getCompanyId());
         searchContext.setGroupIds(new long[]{serviceContext.getScopeGroupId()});
         searchContext.setStart(pagination.getStartPosition());
         searchContext.setEnd(pagination.getEndPosition());
         searchContext.setLocale(locale);
-        // 3. Build Query
         BooleanQuery fullQuery = new BooleanQueryImpl();
 
-        // A. Structure Key (Must match exactly)
         BooleanQuery structureQuery = new BooleanQueryImpl();
         structureQuery.addTerm("ddmStructureKey", structureKey);
         fullQuery.add(structureQuery, BooleanClauseOccur.MUST);
 
-        // B. Status (Approved)
         BooleanQuery statusQuery = new BooleanQueryImpl();
         statusQuery.addRequiredTerm(Field.STATUS, WorkflowConstants.STATUS_APPROVED);
         fullQuery.add(statusQuery, BooleanClauseOccur.MUST);
 
         searchContext.setKeywords(search);
-        // C. Head (Latest Version)
         BooleanQuery headQuery = new BooleanQueryImpl();
         headQuery.addRequiredTerm("head", true);
         fullQuery.add(headQuery, BooleanClauseOccur.MUST);
@@ -108,24 +102,19 @@ _log.info(serviceContext.getScopeGroupId());
         BooleanClause booleanClause = new BooleanClauseImpl(fullQuery, BooleanClauseOccur.MUST);
         searchContext.setBooleanClauses(new BooleanClause[] { booleanClause });
 
-        // 4. Sort
         Sort sort = SortFactoryUtil.create("createDate", true);
         searchContext.setSorts(sort);
 
-        // 5. Execute
         Indexer<JournalArticle> indexer = IndexerRegistryUtil.getIndexer(JournalArticle.class);
 
-        // Correct Method Signature: search(SearchContext)
         Hits hits = indexer.search(searchContext);
 
         _log.info("Hits for structure " + structureKey + ": " + hits.getLength());
 
-        // 6. Map Results
         List<NewsArticle> newsItems = new ArrayList<>();
 
         for (Document doc : hits.getDocs()) {
 
-            // Robust ID Extraction
             long resourcePrimKey = GetterUtil.getLong(doc.get(Field.ENTRY_CLASS_PK));
             if (resourcePrimKey <= 0) {
                 resourcePrimKey = GetterUtil.getLong(doc.get("resourcePrimKey"));
@@ -141,7 +130,6 @@ _log.info(serviceContext.getScopeGroupId());
             if (ja != null) {
                 NewsArticle item = new NewsArticle();
 
-                // Smart Title
                 String title = ja.getTitle(locale);
                 if (Validator.isNull(title)) title = ja.getTitleCurrentValue();
                 item.setTitle(title);
@@ -149,7 +137,6 @@ _log.info(serviceContext.getScopeGroupId());
 
                 DateFormat dateFormat = new SimpleDateFormat("yyyy/M/d hh.mm a");
                 item.setDate(dateFormat.parse(dateFormat.format(date1)));
-                // Smart Description
                 String desc = ja.getDescription(locale).strip();
                 String cDesc = HtmlUtil.stripHtml(desc);
                 if (Validator.isNull(desc))
@@ -166,20 +153,16 @@ _log.info(serviceContext.getScopeGroupId());
 
                     com.liferay.portal.kernel.xml.Document document = SAXReaderUtil.read(content);
 
-                    // Use the field reference name "NewsImages" to find the node
                     Node imageNode = document.selectSingleNode(
                             "/root/dynamic-element[@field-reference='NewsImages']/dynamic-content");
 
                     if (imageNode != null && Validator.isNotNull(imageNode.getText())) {
                         String imageJson = imageNode.getText();
-
-                        // Liferay image fields store a JSON. We need the "url" or "fileEntryTypeValue"
                         JSONObject jsonObject = JSONFactoryUtil.createJSONObject(imageJson);
 
                         if (jsonObject.has("url")) {
                             item.setImage(jsonObject.getString("url"));
                         } else if (jsonObject.has("uuid")) {
-                            // Fallback for older versions or specific configurations
                             String url = "/documents/" + ja.getGroupId() + "/" + jsonObject.getString("uuid");
                             item.setImage(url);
                         }
@@ -214,12 +197,10 @@ _log.info(serviceContext.getScopeGroupId());
             throw new NotFoundException("News Article not found with id: " + id);
         }
 
-        // 2. Map to DTO
         NewsArticle item = new NewsArticle();
         item.setId(ja.getResourcePrimKey());
-        item.setDate(ja.getDisplayDate()); // Return Java Date, format on Frontend
+        item.setDate(ja.getDisplayDate());
 
-        // Title
         String title = ja.getTitle(locale);
         if (Validator.isNull(title)) title = ja.getTitleCurrentValue();
         item.setTitle(title);
@@ -235,26 +216,22 @@ _log.info(serviceContext.getScopeGroupId());
 
             com.liferay.portal.kernel.xml.Document document = SAXReaderUtil.read(content);
 
-            // Use the field reference name "NewsImages" to find the node
             Node imageNode = document.selectSingleNode(
                     "/root/dynamic-element[@field-reference='NewsImages']/dynamic-content");
 
             if (imageNode != null && Validator.isNotNull(imageNode.getText())) {
                 String imageJson = imageNode.getText();
 
-                // Liferay image fields store a JSON. We need the "url" or "fileEntryTypeValue"
                 JSONObject jsonObject = JSONFactoryUtil.createJSONObject(imageJson);
 
                 if (jsonObject.has("url")) {
                     item.setImage(jsonObject.getString("url"));
                 } else if (jsonObject.has("uuid")) {
-                    // Fallback for older versions or specific configurations
                     String url = "/documents/" + ja.getGroupId() + "/" + jsonObject.getString("uuid");
                     item.setImage(url);
                 }
             }
         } catch (Exception e) {
-            // If it's not a JSON field, it might be a simple URL string
             // item.setImage("");
         }
 
