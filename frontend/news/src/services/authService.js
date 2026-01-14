@@ -32,23 +32,22 @@ export const getSystemToken = async (forceRefresh = false) => {
     }
 };
 
-export const fetchWithAuth = async (url, options = {}) => {
-    let token = await getSystemToken();
 
-    if (!token) throw new Error("No Access Token Available");
-
-    const headers = {
-        ...options.headers,
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-    };
-
+export const fetchWithAuth = async (url, options = {}, retries = 3, delay = 1000) => {
     try {
+        let token = await getSystemToken();
+        if (!token) throw new Error("No Access Token Available");
+
+        const headers = {
+            ...options.headers,
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        };
+
         let response = await fetch(url, { ...options, headers });
 
         if (response.status === 401) {
-            console.warn("Token expired. Wiping storage and retrying...");
-
+            console.warn("Token expired. Wiping storage and refreshing...");
             sessionStorage.removeItem("system_token");
 
             token = await getSystemToken(true);
@@ -59,10 +58,25 @@ export const fetchWithAuth = async (url, options = {}) => {
             }
         }
 
+        if (!response.ok && response.status >= 500) {
+            throw new Error(`Server Error: ${response.status}`);
+        }
+
         return response;
+
     } catch (error) {
-        console.error("Network/CORS Error:", error);
-        sessionStorage.removeItem("system_token");
+        if (retries > 0) {
+            console.warn(`Request failed: ${error.message}. Retrying in ${delay}ms... (${retries} left)`);
+
+            await new Promise(resolve => setTimeout(resolve, delay));
+
+            return fetchWithAuth(url, options, retries - 1, delay * 2);
+        }
+
+        console.error("Final Request Failure:", error);
+        if (error.message.includes("Access Token")) {
+            sessionStorage.removeItem("system_token");
+        }
         throw error;
     }
 };

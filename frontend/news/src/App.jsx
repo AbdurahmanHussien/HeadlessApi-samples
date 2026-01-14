@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, NavLink, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route, NavLink, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getSystemToken } from "./services/authService.js";
 import './App.css';
