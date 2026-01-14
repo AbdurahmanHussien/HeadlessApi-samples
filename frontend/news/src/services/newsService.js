@@ -2,15 +2,22 @@ import { request } from "./api";
 import { AUTH_CONFIG } from "../utils/config";
 
 export const getNewsList = async (search, date, page, pageSize, lang) => {
-    const url = new URL(`${AUTH_CONFIG.apiBaseUrl}/o/News/v1.0/news`);
 
-    if (search) url.searchParams.append("search", search);
-    if (date) url.searchParams.append("Date", date);
+    const endpoint = "/o/News/v1.0/news";
 
-    url.searchParams.append("page", page);
-    url.searchParams.append("pageSize", pageSize);
 
-    return request(url.toString(), {
+    const params = new URLSearchParams({
+        page: page,
+        pageSize: pageSize
+    })
+
+    if(search) params.append("search", search);
+    if(date) params.append("Date", date);
+
+
+    const url = `${AUTH_CONFIG.apiBaseUrl}${endpoint}?${params.toString()}`;
+
+    return request(url, {
         headers: { 'Accept-Language': lang }
     });
 }

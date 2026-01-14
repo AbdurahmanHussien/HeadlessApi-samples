@@ -8,11 +8,18 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [react()],
-  proxy: {
-    '/o': {
-      target: 'http://localhost:8080',
-      changeOrigin: true,
-      secure: false,
+  server: {
+    proxy: {
+      '/o': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/documents': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+      }
     }
   },
   resolve: {
