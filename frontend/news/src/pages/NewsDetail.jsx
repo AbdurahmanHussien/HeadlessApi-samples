@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { getNewsDetail } from "../services/newsService";
 import {formatDate} from "../utils/formatters.js";
+import myImage from '@/assets/images/placeholder-news.jpg';
+import {AUTH_CONFIG} from "@/utils/config.js";
 
 const NewsDetail = () => {
     const { id } = useParams();
@@ -49,7 +51,7 @@ const NewsDetail = () => {
                                             height: '400px',
                                             width: '100%',
                                             display: 'block',
-                                            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${article.image ? `http://localhost:8080${article.image}` : '/placeholder.jpg'})`,
+                                            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${article.image ? `${AUTH_CONFIG.apiBaseUrl}${article.image}` : `${myImage}`})`,
                                             backgroundSize: 'cover',
                                             backgroundPosition: 'center',
                                             backgroundRepeat: 'no-repeat'

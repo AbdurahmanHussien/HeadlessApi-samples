@@ -1,0 +1,9 @@
+apiDir: "../events-api/src/main/java"
+apiPackagePath: "events"
+application:
+    baseURI: "/events"
+    className: "EventsApplication"
+    name: "Events"
+author: "ThinkPad"
+clientDir: "../events-client/src/main/java"
+testDir: "../events-test/src/testIntegration/java"

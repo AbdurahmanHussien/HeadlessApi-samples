@@ -1,0 +1,5 @@
+Bundle-Name: events-test
+Bundle-SymbolicName: events.test
+Bundle-Version: 1.0.0
+-includeresource: events.client.jar=../events-client/build/libs/events.client-1.0.0.jar;lib:=true
+-provider-policy: ${replacestring;${range;[==,==]};.*,(.*)];$1}

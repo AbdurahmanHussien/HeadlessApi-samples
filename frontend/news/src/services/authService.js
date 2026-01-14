@@ -40,7 +40,6 @@ export const fetchWithAuth = async (url, options = {}) => {
     const headers = {
         ...options.headers,
         "Authorization": `Bearer ${token}`,
-        ...options.headers,
         "Content-Type": "application/json"
     };
 

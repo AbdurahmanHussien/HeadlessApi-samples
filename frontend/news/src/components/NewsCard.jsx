@@ -2,12 +2,13 @@ import React from 'react';
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {formatDate} from "../utils/formatters.js";
+import {AUTH_CONFIG} from "@/utils/config.js";
 
 const NewsCard = ({ article }) => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const imageUrl = article.image
-        ? `http://localhost:8080${article.image}`
+        ? `${AUTH_CONFIG.apiBaseUrl}${article.image}`
         : "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1000&auto=format&fit=crop";
 
 

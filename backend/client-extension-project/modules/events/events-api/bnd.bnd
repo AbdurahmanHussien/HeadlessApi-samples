@@ -1,0 +1,6 @@
+Bundle-Name: events-api
+Bundle-SymbolicName: events.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	events.dto.v1_0,\
+	events.resource.v1_0

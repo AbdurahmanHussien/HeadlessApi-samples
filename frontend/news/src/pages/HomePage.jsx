@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import {getNewsList} from "../services/newsService.js";
 import NewsCard from "../components/NewsCard.jsx";
+import {ClipLoader, RingLoader} from "react-spinners";
 
 
 const HomePage = () => {
     const { t, i18n } = useTranslation();
     const [topNews, setTopNews] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [color, setColor] = useState("#114933");
 
     // Fetch only the latest 3 items
     useEffect(() => {
@@ -26,6 +28,22 @@ const HomePage = () => {
         fetchTopNews();
     }, [i18n.language]);
 
+    if(loading) {
+        return (
+            <div>
+
+                <RingLoader
+                    color={color}
+                    size={50}
+                    style={{
+                        textAlign: 'center',
+                        alignSelf: 'center'
+                    }}
+                    loading={loading}/>
+
+            </div>
+        );
+    }
     return (
         <div>
             <div style={{
@@ -82,7 +100,14 @@ const HomePage = () => {
                 </div>
 
                 {loading ? (
-                    <div style={{ textAlign: 'center', padding: '40px' }}>{t('loading')}</div>
+                    <div>
+
+                        <RingLoader
+                            color={color}
+                            size={50}
+                            loading={loading}/>
+
+                    </div>
                 ) : (
                     <div className="grid-3-wrapper">
                         {topNews.map((article) => (

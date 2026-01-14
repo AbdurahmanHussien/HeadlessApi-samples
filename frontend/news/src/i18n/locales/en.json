@@ -14,5 +14,16 @@
   "welcome_subtitle": "Stay connected with the latest updates, company news, and announcements directly from our headquarters.",
   "browse_news": "Browse All News",
   "latest_updates": "Latest Updates",
-  "view_details": "View Details"
+  "view_details": "View Details",
+  "no_news_found": "No News exist",
+  "calendar_week":"Week",
+  "calendar_month": "Month",
+  "calendar_registered_events": "Registered events",
+  "calendar.unregistered.events":"Unregistered events",
+  "calendar.teams.events":"Microsoft Teams Events",
+  "events": "Events",
+  "attending": "Attending",
+  "attend-event" : "Attend Event",
+  "event-link" : "Event Link"
+
 }

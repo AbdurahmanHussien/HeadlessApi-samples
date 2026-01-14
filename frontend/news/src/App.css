@@ -4472,3 +4472,12 @@ input[type="date"].styled-date::-webkit-calendar-picker-indicator {
   outline: 2px solid #1B5A37;
   outline-offset: 2px;
 }
+.actions{
+  display: flex;
+  gap: 10px;
+}
+
+
+.filter-card .filters .search-box input{
+   direction: inherit;
+ }
